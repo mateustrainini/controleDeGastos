@@ -1,0 +1,327 @@
+:root {
+    color-scheme: dark;
+    color: #e9edf5;
+    background: #09142c;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    --bg: #081626;
+    --surface: #0f213c;
+    --surface-alt: #122946;
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #e9edf5;
+    --muted: #a3b0cd;
+    --primary: #3c82ff;
+    --primary-soft: rgba(60, 130, 255, 0.18);
+    --danger: #ff5f7a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, rgba(60, 130, 255, 0.18), transparent 28%),
+                linear-gradient(180deg, #081626 0%, #07111f 100%);
+    color: var(--text);
+}
+
+.app-container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 28px 20px 36px;
+}
+
+.app-header {
+    text-align: center;
+    padding: 24px 20px;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: rgba(15, 33, 60, 0.82);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+}
+
+.app-header h1 {
+    font-size: clamp(1.9rem, 2.4vw, 2.8rem);
+    margin-bottom: 10px;
+}
+
+.app-header p {
+    color: var(--muted);
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+section {
+    margin-top: 28px;
+}
+
+.expense-form, .earnings-form {
+    display: grid;
+    gap: 16px;
+    padding: 24px;
+    border-radius: 20px;
+    background: rgba(10, 24, 42, 0.93);
+    border: 1px solid var(--border);
+}
+
+.expense-form h2,
+.summary-section h2,
+.expense-list-section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 14px;
+}
+
+.form-row {
+    display: grid;
+    gap: 8px;
+}
+
+label {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+input,
+select,
+button {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #11263f;
+    color: var(--text);
+    padding: 14px 16px;
+    font: inherit;
+}
+
+input:focus,
+select:focus,
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(60, 130, 255, 0.2);
+    border-color: rgba(60, 130, 255, 0.6);
+}
+
+select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--text) 50%),
+                      linear-gradient(135deg, var(--text) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: #3170ff;
+    color: #fff;
+    font-weight: 600;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+button:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+#btnModalEarnings{
+    width: auto;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #3170ff;
+    color: #fff;
+    font-weight: 600;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.divBtnModal{
+    margin-top: 1.5rem;
+}
+
+.summary-cards {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.summary-card {
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(8, 18, 34, 0.96);
+    border: 1px solid var(--border);
+}
+
+.summary-card span {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+
+.summary-card strong {
+    display: block;
+    font-size: 1.75rem;
+    color: var(--text);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: rgba(10, 21, 37, 0.95);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+th {
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.84rem;
+}
+
+tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+td:last-child {
+    width: 124px;
+}
+
+.expense-list-section .empty-state {
+    text-align: center;
+    color: var(--muted);
+    padding: 30px 0;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fff;
+    background: rgba(60, 130, 255, 0.15);
+    transition: background-color 0.2s ease;
+}
+
+.action-button:hover {
+    background: rgba(60, 130, 255, 0.28);
+}
+
+@media (max-width: 680px) {
+    .app-container {
+        padding: 18px 14px 28px;
+    }
+
+    .expense-form,
+    .summary-card,
+    .table-wrapper {
+        padding: 18px;
+    }
+
+    th,
+    td {
+        padding: 14px 12px;
+    }
+}
+
+.plus{
+    color: darkgreen !important;
+}
+.minus{
+    color: darkred !important;
+}
+
+/* Modal overlay and dialog */
+.modal-fog {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px) saturate(1.05);
+    -webkit-backdrop-filter: blur(6px) saturate(1.05);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+    z-index: 9999;
+}
+
+.modal-fog.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal {
+    width: min(960px, 95%);
+    max-height: 82vh;
+    overflow: auto;
+    background: rgba(15, 33, 60, 0.98);
+    border-radius: 14px;
+    padding: 20px 22px;
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 40px rgba(2, 8, 23, 0.6);
+    transform: translateY(8px) scale(0.98);
+    opacity: 0;
+    transition: transform 220ms ease, opacity 220ms ease;
+    position: relative;
+}
+
+.modal-fog.show .modal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.modal h2 {
+    margin: 0 0 10px 0;
+}
+
+.modal #btnClose {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--danger);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+    transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.modal #btnClose:hover {
+    transform: scale(1.06);
+}
+
+.modal .table-wrapper {
+    margin-top: 10px;
+}
