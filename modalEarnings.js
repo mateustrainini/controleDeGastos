@@ -1,17 +1,14 @@
-const btnModal = document.querySelector('#btnModalEarnings');
-
-loadData();
+const btnModalEarnings = document.querySelector('#btnModalEarnings');
 
 function renderEarnings() {
-    // prevent duplicate modals
     if (document.querySelector('.modal-fog')) return;
 
-    let fog = document.createElement('div');
+    const fog = document.createElement('div');
     fog.className = 'modal-fog';
     fog.innerHTML = `
-      <div class="modal" role="dialog" aria-modal="true">
-        <button id="btnClose" aria-label="Fechar">X</button>
-        <h2>Ganhos Registrados</h2>
+        <div class="modal" role="dialog" aria-modal="true">
+            <button class="modal-close" aria-label="Fechar">&times;</button>
+            <h2>Ganhos Registrados</h2>
             <div class="table-wrapper">
                 <table id="earnings-table">
                     <thead>
@@ -23,91 +20,68 @@ function renderEarnings() {
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody>
-
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
-      </div>
+        </div>
     `;
 
+    document.body.appendChild(fog);
+    requestAnimationFrame(() => fog.classList.add('show'));
+
     const tbody = fog.querySelector('tbody');
-    if (data.earning == '' || data.earnings == null) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="4" class="empty-state">Nenhuma despesa cadastrada ainda.</td>
-            </tr>
-        `;
-    } else if (data.earnings != '' && data.earnings !== null) {
-        // append rows instead of overwriting so all earnings appear
-        data.earnings.forEach(e => {
-            tbody.innerHTML += `
-            <tr>
+
+    function fillEarningsTable() {
+        const earnings = data.earnings.filter(e => (e.month || getMonthKey(e.createdAt)) === selectedMonth);
+        tbody.innerHTML = '';
+        if (earnings.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty-state">Nenhum ganho cadastrado neste mês.</td>
+                </tr>
+            `;
+            return;
+        }
+
+        earnings.forEach(e => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
                 <td>${e.description}</td>
                 <td>${categoryEarningLabels[e.category] || e.category}</td>
                 <td>${formatCurrency(e.amount)}</td>
                 <td>${formatDateOnly(e.createdAt)}</td>
-                <td>
-                    <button type="button" class="action-button" value="${e.id}">Excluir</button>
-                </td>
-            </tr>
-        `;
-
-            let btnDelete = tbody.querySelector('.action-button');
-            btnDelete.addEventListener('click', () => deleteEarning(e.id));
+                <td><button type="button" class="action-button" data-id="${e.id}">Excluir</button></td>
+            `;
+            tbody.appendChild(row);
         });
     }
 
-    document.body.append(fog);
+    fillEarningsTable();
 
-    // mark modal as open in storage so it survives reload
-    localStorage.setItem('earningsModalOpen', '1');
-
-    // trigger show class to run transitions
-    requestAnimationFrame(() => fog.classList.add('show'));
-
-    const btnClose = fog.querySelector('#btnClose');
-
-    function closeModal() {
+    function close() {
         fog.classList.remove('show');
-        document.removeEventListener('keydown', onKeyDown);
-        setTimeout(() => {
-            fog.remove();
-            localStorage.removeItem('earningsModalOpen');
-        }, 240);
+        document.removeEventListener('keydown', onKey);
+        setTimeout(() => fog.remove(), 240);
     }
 
-    btnClose.addEventListener('click', () => {
-        closeModal();
-    });
-
-    // click outside modal (on the fog) closes it
-    fog.addEventListener('click', (e) => {
-        if (e.target === fog) closeModal();
-    });
-
-    // ESC closes modal
-    function onKeyDown(e) {
-        if (e.key === 'Escape') closeModal();
+    function onKey(e) {
+        if (e.key === 'Escape') close();
     }
-    document.addEventListener('keydown', onKeyDown);
+
+    fog.querySelector('.modal-close').addEventListener('click', close);
+    fog.addEventListener('click', e => { if (e.target === fog) close(); });
+    document.addEventListener('keydown', onKey);
+
+    tbody.addEventListener('click', e => {
+        if (!e.target.matches('button[data-id]')) return;
+        const id = e.target.dataset.id;
+        data.earnings = data.earnings.filter(item => item.id !== id);
+        saveData();
+        fillEarningsTable();
+        refreshUI();
+    });
 }
 
-if (btnModal) {
-    btnModal.addEventListener('click', renderEarnings);
-}
-
-// reopen modal after reload if was open
-if (localStorage.getItem('earningsModalOpen') === '1') {
-    // small timeout to ensure scripts and data are ready
-    setTimeout(() => {
-        renderEarnings();
-    }, 50);
-}
-
-function deleteEarning(earningId) {
-    data.earnings = data.earnings.filter((earning) => earning.id !== earningId);
-    saveData();
-    renderEarnings();
-    window.location.reload();
+if (btnModalEarnings) {
+    btnModalEarnings.addEventListener('click', renderEarnings);
 }

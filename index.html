@@ -16,71 +16,10 @@
             <p>Registre despesas, acompanhe totais e mantenha as finanças sob controle.</p>
         </header>
 
-        <button id="btnNext">Próximo Mês</button>
-
-        <section class="earnings-form-section">
-            <h2>Adicionar Ganhos</h2>
-            <form id="earnings-form" class="earnings-form">
-                <div class="form-row">
-                    <label for="description-earnings">Descrição</label>
-                    <input type="text" id="description-earnings" name="description" required>
-                </div>
-
-                <div class="form-row">
-                    <label for="category-earnings">Categoria</label>
-                    <select id="category-earnings" name="category-earnings" required>
-                        <option value="">Selecione</option>
-                        <option value="salario">Salário</option>
-                        <option value="transporte">Vale Transporte</option>
-                        <option value="outros">Outros</option>
-                    </select>
-                </div>
-
-                <div class="form-row">
-                    <label for="amount-earnings">Valor (R$)</label>
-                    <input type="number" id="amount-earnings" name="amount" placeholder="0.00" step="0.01" min="0" required>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit">Adicionar</button>
-                </div>
-            </form>
-        </section>
-
-        <section class="expense-form-section">
-            <h2>Adicionar Despesa</h2>
-            <form id="expense-form" class="expense-form">
-                <div class="form-row">
-                    <label for="description">Descrição</label>
-                    <input type="text" id="description" name="description" required>
-                </div>
-
-                <div class="form-row">
-                    <label for="category">Categoria</label>
-                    <select id="category" name="category" required>
-                        <option value="">Selecione</option>
-                        <option value="alimentacao">Alimentação</option>
-                        <option value="transporte">Transporte</option>
-                        <option value="lazer">Lazer</option>
-                        <option value="outros">Outros</option>
-                    </select>
-                </div>
-
-                <div class="form-row">
-                    <label for="amount">Valor (R$)</label>
-                    <input type="number" id="amount" name="amount" placeholder="0.00" step="0.01" min="0" required>
-                </div>
-                
-                <div class="form-row">
-                    <label for="amount">Data</label>
-                    <input type="date" id="date" name="date" required>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit">Adicionar</button>
-                </div>
-            </form>
-        </section>
+        <div class="action-buttons">
+            <button id="btnAddEarning">+ Adicionar Ganho</button>
+            <button id="btnAddExpense">+ Adicionar Despesa</button>
+        </div>
 
         <section class="summary-section">
             <h2>Resumo</h2>
@@ -114,7 +53,7 @@
 
         <div class="divBtnModal">
             <h3>Ganhos Registrados</h3>
-            <button id="btnModalEarnings">Visualisar</button>
+            <button id="btnModalEarnings">Visualizar</button>
         </div>
 
         <section class="expense-list-section">
@@ -132,7 +71,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="4" class="empty-state">Nenhuma despesa cadastrada ainda.</td>
+                            <td colspan="5" class="empty-state">Nenhuma despesa cadastrada ainda.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -141,9 +80,9 @@
     </div>
 
     <script src="script.js"></script>
-    <script src="calculate.js"></script>
+    <script src="modalAddEarning.js"></script>
+    <script src="modalAddExpense.js"></script>
     <script src="modalEarnings.js"></script>
-    <script src="month.js"></script>
 </body>
 
 </html>

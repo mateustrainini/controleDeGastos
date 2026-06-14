@@ -44,6 +44,25 @@ body {
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
 }
 
+.action-buttons,
+.month-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
+
+.month-filter-bar label {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.month-filter-bar select {
+    max-width: 260px;
+}
+
 .app-header h1 {
     font-size: clamp(1.9rem, 2.4vw, 2.8rem);
     margin-bottom: 10px;
@@ -324,4 +343,30 @@ td:last-child {
 
 .modal .table-wrapper {
     margin-top: 10px;
+}
+
+/* Styled round close button for modals */
+.modal .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--danger);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    transition: transform 160ms ease, filter 160ms ease;
+}
+
+.modal .modal-close:hover {
+    transform: scale(1.06);
+    filter: brightness(0.95);
 }
