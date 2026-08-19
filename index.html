@@ -17,8 +17,9 @@
         </header>
 
         <div class="action-buttons">
-            <button id="btnAddEarning">+ Adicionar Ganho</button>
-            <button id="btnAddExpense">+ Adicionar Despesa</button>
+            <button id="btnAddEarning" style="background: darkgreen;">+ Adicionar Ganho</button>
+            <button id="btnAddExpense" style="background: darkred;">+ Adicionar Despesa</button>
+            <button id="btnEditEconomy" style="background: darkgoldenrod;">= Reorganizar Economia</button>
         </div>
 
         <section class="summary-section">
@@ -51,6 +52,18 @@
             </div>
         </section>
 
+        <section class="graficos">
+            <div class="grafico-card">
+                <h2>Despesas por categoria</h2>
+                <canvas id="pieChart"></canvas>
+            </div>
+
+            <div class="grafico-card">
+                <h2>Despesas por mês</h2>
+                <canvas id="barChart"></canvas>
+            </div>
+        </section>
+
         <div class="divBtnModal">
             <h3>Ganhos Registrados</h3>
             <button id="btnModalEarnings">Visualizar</button>
@@ -80,9 +93,15 @@
     </div>
 
     <script src="script.js"></script>
+
     <script src="modalAddEarning.js"></script>
     <script src="modalAddExpense.js"></script>
+    <script src="modalEditEconomy.js"></script>
+
     <script src="modalEarnings.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="charts.js"></script>
 </body>
 
 </html>

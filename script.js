@@ -1,5 +1,7 @@
 const STORAGE_KEY = 'controle-de-gastos-data';
 
+let edit = false;
+
 const cashEl = document.getElementById('cash');
 const transportEl = document.getElementById('cash-transport');
 const economyEl = document.getElementById('cash-economy');
@@ -27,6 +29,7 @@ let selectedMonth = currentMonth;
 const data = {
     earnings: [],
     expenses: [],
+    economy: [],
     summary: {},
 };
 
@@ -39,11 +42,13 @@ function loadData() {
 
         data.expenses = Array.isArray(parsed.expenses) ? parsed.expenses : [];
         data.earnings = Array.isArray(parsed.earnings) ? parsed.earnings : [];
+        data.economy = Array.isArray(parsed.economy) ? parsed.economy : [];
         data.summary = typeof parsed.summary === 'object' && !Array.isArray(parsed.summary) ? parsed.summary : {};
     } catch (error) {
         console.error('Erro ao carregar dados do localStorage:', error);
         data.expenses = [];
         data.earnings = [];
+        data.economy = [];
         data.summary = {};
     }
 }
@@ -125,6 +130,7 @@ function renderMonthFilter() {
         selectedMonth = select.value;
         renderExpenses();
         recalcSummary();
+        renderPieChart();
     });
 
     const label = document.createElement('label');
@@ -149,7 +155,6 @@ function getFilteredEarnings() {
 function recalcSummary() {
     const monthExpenses = getFilteredExpenses();
     const monthEarnings = getFilteredEarnings();
-
     // Compute initial pools from earnings
     let totalTransportEarning = 0;
     let totalOtherEarnings = 0;
@@ -162,18 +167,22 @@ function recalcSummary() {
             totalTransportEarning += amt;
         } else if (e.category === 'salario') {
             let econ = 0;
-            if (amt >= 700) econ = 500;
-            else if (amt > 300) econ = 300;
-            economy += econ;
+            if (amt >= 700) addEconomy("add", 500), econ = 500;
+            else if (amt > 300) addEconomy("add", 300), econ = 300;
+            economy = econ;
             salaryCash += amt - econ;
         } else {
             totalOtherEarnings += amt;
         }
     });
 
+    console.log(totalTransportEarning, totalOtherEarnings, salaryCash, economy)
+
     let remCash = salaryCash + totalOtherEarnings; // available cash after applying economy
     let remTransport = totalTransportEarning;
-    let remEconomy = economy;
+    let remEconomy = data.economy.amount;
+
+    console.log(remCash, remEconomy, remTransport)
 
     // Totals for display (original expense sums)
     let totalTransportExpenses = 0;
@@ -221,7 +230,17 @@ function recalcSummary() {
         // If remaining > 0 here, overall funds insufficient — leave remaining debt (not handled)
     });
 
+    //console.log(remCash, remEconomy, remTransport)
+
     const totalAll = totalTransportExpenses + totalOtherExpenses;
+
+    // console.log(remCash, remEconomy);
+    // if (edit) {
+    //     console.log('passou')
+    //     remCash = editCashValue;
+    //     remEconomy = editEconomyValue;
+    // }
+    // console.log(remCash, remEconomy);
 
     cashEl.textContent = formatCurrency(remCash);
     transportEl.textContent = formatCurrency(remTransport);
@@ -240,8 +259,51 @@ function recalcSummary() {
         month: selectedMonth,
     };
 
+    console.log(data.summary)
+
     saveData();
 }
+
+function addEconomy(operation, amount) {
+    const createdAt = new Date().toISOString();
+
+    let value = data.economy.amount || 0;
+
+    if (operation == "add") {
+        value += amount;
+    } else {
+        value -= amount;
+    }
+
+    console.log(value)
+
+    data.economy = {
+        id: Date.now().toString(),
+        operation: operation,
+        amount: value,
+        createdAt: createdAt,
+        month: getMonthKey(createdAt),
+    };
+
+    saveData();
+}
+
+// function editEconomia(){
+//     data.summary = {
+//         cash: editCashValue,
+//         transport: data.summary.transport,
+//         economy: editEconomyValue,
+//         expenses: data.summary.expenses,
+//         transportExpenses: data.summary.transportExpenses,
+//         totalAll: data.summary.totalAll,
+//         month: selectedMonth,
+//     };
+
+//     cashEl.textContent = formatCurrency(editCashValue);
+//     economyEl.textContent = formatCurrency(editEconomyValue);
+
+//     saveData();
+// }
 
 function renderExpenses() {
     expenseTableBody.innerHTML = '';
