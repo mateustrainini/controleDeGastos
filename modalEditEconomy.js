@@ -11,25 +11,27 @@ function openEconomyModal() {
     const fog = document.createElement('div');
     fog.className = 'modal-fog';
     fog.innerHTML = `
-        <div id="modalEconomy" class="modal" role="dialog" aria-modal="true">
+        <div id="modalEconomy" class="modal economy-modal" role="dialog" aria-modal="true">
             <button class="modal-close" aria-label="Fechar">&times;</button>
-            <h2>Reorganizar Economia</h2>
-            <h4>Atual:</h4>
-
-            <div class="summary-card">
-                <span>Caixa</span>
-                <strong id="cash">${formatCurrency(editCashValue)}</strong>
+            <div class="economy-header">
+                <h2>Reorganizar Economia</h2>
             </div>
-
-            <div class="summary-card">
-                <span>Economia</span>
-                <strong id="cash-economy">${formatCurrency(editEconomyValue)}</strong>
+            <div class="economy-current">
+                <h4>Saldo atual</h4>
+                <div class="economy-summary">
+                    <div class="economy-summary-card">
+                        <span>Caixa</span>
+                        <strong id="cash">${formatCurrency(editCashValue)}</strong>
+                    </div>
+                    <div class="economy-summary-card">
+                        <span>Economia</span>
+                        <strong id="cash-economy">${formatCurrency(editEconomyValue)}</strong>
+                    </div>
+                </div>
             </div>
-
             <hr>
-
             <form id="economy-modal-form" class="economy-form">
-                <div class="form-row">
+                <div class="economy-field">
                     <label for="modal-category-earning">Operação</label>
                     <select id="modal-category-earning" name="category" required>
                         <option value="">Selecione</option>
@@ -37,11 +39,13 @@ function openEconomyModal() {
                         <option value="add">Economizar</option>
                     </select>
                 </div>
-                <div class="form-row">
+                <div class="economy-field">
                     <label for="modal-amount-earning">Valor (R$)</label>
-                    <input type="number" id="modal-amount-earning" name="amount" placeholder="0.00" step="0.01" min="0" required>
+                    <input type="number" id="modal-amount-earning" name="amount" 
+                           placeholder="0.00" step="0.01" min="0"
+                           required>
                 </div>
-                <div class="form-actions">
+                <div class="economy-actions">
                     <button type="submit">Adicionar</button>
                 </div>
             </form>

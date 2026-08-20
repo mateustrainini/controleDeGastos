@@ -29,7 +29,7 @@ let selectedMonth = currentMonth;
 const data = {
     earnings: [],
     expenses: [],
-    economy: [],
+    economies: [],
     summary: {},
 };
 
@@ -42,13 +42,13 @@ function loadData() {
 
         data.expenses = Array.isArray(parsed.expenses) ? parsed.expenses : [];
         data.earnings = Array.isArray(parsed.earnings) ? parsed.earnings : [];
-        data.economy = Array.isArray(parsed.economy) ? parsed.economy : [];
+        data.economies = Array.isArray(parsed.economies) ? parsed.economies : [];
         data.summary = typeof parsed.summary === 'object' && !Array.isArray(parsed.summary) ? parsed.summary : {};
     } catch (error) {
         console.error('Erro ao carregar dados do localStorage:', error);
         data.expenses = [];
         data.earnings = [];
-        data.economy = [];
+        data.economies = [];
         data.summary = {};
     }
 }
@@ -152,9 +152,14 @@ function getFilteredEarnings() {
     return data.earnings.filter(e => (e.month || getMonthKey(e.createdAt)) === selectedMonth);
 }
 
+function getFilteredEconomy() {
+    return data.economies.filter(e => (e.month || getMonthKey(e.createdAt)) === selectedMonth);
+}
+
 function recalcSummary() {
     const monthExpenses = getFilteredExpenses();
     const monthEarnings = getFilteredEarnings();
+    const monthEconomy = getFilteredEconomy();
     // Compute initial pools from earnings
     let totalTransportEarning = 0;
     let totalOtherEarnings = 0;
@@ -166,23 +171,27 @@ function recalcSummary() {
         if (e.category === 'transporte') {
             totalTransportEarning += amt;
         } else if (e.category === 'salario') {
-            let econ = 0;
-            if (amt >= 700) addEconomy("add", 500), econ = 500;
-            else if (amt > 300) addEconomy("add", 300), econ = 300;
-            economy = econ;
-            salaryCash += amt - econ;
+            salaryCash += amt;
         } else {
             totalOtherEarnings += amt;
         }
     });
 
-    console.log(totalTransportEarning, totalOtherEarnings, salaryCash, economy)
+    monthEconomy.forEach(e => {
+        let amount = Number(e.amount);
+
+        if (e.operation == "add") {
+            economy += amount;
+            salaryCash -= amount;
+        } else if (e.operation == "rem") {
+            salaryCash += amount;
+            economy -= amount;
+        }
+    })
 
     let remCash = salaryCash + totalOtherEarnings; // available cash after applying economy
     let remTransport = totalTransportEarning;
-    let remEconomy = data.economy.amount;
-
-    console.log(remCash, remEconomy, remTransport)
+    let remEconomy = economy;
 
     // Totals for display (original expense sums)
     let totalTransportExpenses = 0;
@@ -230,17 +239,7 @@ function recalcSummary() {
         // If remaining > 0 here, overall funds insufficient — leave remaining debt (not handled)
     });
 
-    //console.log(remCash, remEconomy, remTransport)
-
     const totalAll = totalTransportExpenses + totalOtherExpenses;
-
-    // console.log(remCash, remEconomy);
-    // if (edit) {
-    //     console.log('passou')
-    //     remCash = editCashValue;
-    //     remEconomy = editEconomyValue;
-    // }
-    // console.log(remCash, remEconomy);
 
     cashEl.textContent = formatCurrency(remCash);
     transportEl.textContent = formatCurrency(remTransport);
@@ -259,51 +258,25 @@ function recalcSummary() {
         month: selectedMonth,
     };
 
-    console.log(data.summary)
-
     saveData();
 }
 
 function addEconomy(operation, amount) {
     const createdAt = new Date().toISOString();
 
-    let value = data.economy.amount || 0;
-
-    if (operation == "add") {
-        value += amount;
-    } else {
-        value -= amount;
-    }
-
-    console.log(value)
-
-    data.economy = {
+    let economy = {
         id: Date.now().toString(),
         operation: operation,
-        amount: value,
+        amount: amount,
         createdAt: createdAt,
         month: getMonthKey(createdAt),
     };
 
+    data.economies.push(economy);
+
     saveData();
+    location.reload();
 }
-
-// function editEconomia(){
-//     data.summary = {
-//         cash: editCashValue,
-//         transport: data.summary.transport,
-//         economy: editEconomyValue,
-//         expenses: data.summary.expenses,
-//         transportExpenses: data.summary.transportExpenses,
-//         totalAll: data.summary.totalAll,
-//         month: selectedMonth,
-//     };
-
-//     cashEl.textContent = formatCurrency(editCashValue);
-//     economyEl.textContent = formatCurrency(editEconomyValue);
-
-//     saveData();
-// }
 
 function renderExpenses() {
     expenseTableBody.innerHTML = '';
